@@ -6,7 +6,7 @@
         "title": "Ability List",
         "icon": "/favicon.ico",
         "popover": "/",
-        "height": 1000,
-        "width": 1000
+        "height": 220,
+        "width": 600
     }
 }
