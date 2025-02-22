@@ -3141,7 +3141,7 @@ const Spells = [
         ritual: false,
         id: 'cone-of-cold',
         range: {
-            ru: 'На себя (60-фут cone)',
+            ru: 'На себя (60-фут конус)',
             en: 'Self (60-foot cone)',
         },
         castTime: {
@@ -4401,7 +4401,7 @@ const Spells = [
         ritual: false,
         id: 'lightning-bolt',
         range: {
-            ru: 'На себя (100-фут line)',
+            ru: 'На себя (100-фут линия)',
             en: 'Self (100-foot line)',
         },
         castTime: {
@@ -5241,7 +5241,7 @@ const Spells = [
         ritual: false,
         id: 'burning-hands',
         range: {
-            ru: 'На себя (15-фут cone)',
+            ru: 'На себя (15-фут конус)',
             en: 'Self (15-foot cone)',
         },
         castTime: {
@@ -6831,7 +6831,7 @@ const Spells = [
         ritual: false,
         id: 'gust-of-wind',
         range: {
-            ru: 'На себя (60-фут line)',
+            ru: 'На себя (60-фут линия)',
             en: 'Self (60-foot line)',
         },
         castTime: {
@@ -7251,7 +7251,7 @@ const Spells = [
         ritual: false,
         id: 'conjure-barrage',
         range: {
-            ru: 'На себя (60-фут cone)',
+            ru: 'На себя (60-фут конус)',
             en: 'Self (60-foot cone)',
         },
         castTime: {
@@ -7911,7 +7911,7 @@ const Spells = [
         ritual: false,
         id: 'prismatic-spray',
         range: {
-            ru: 'На себя (60-фут cone)',
+            ru: 'На себя (60-фут конус)',
             en: 'Self (60-foot cone)',
         },
         castTime: {
@@ -8391,7 +8391,7 @@ const Spells = [
         ritual: false,
         id: 'color-spray',
         range: {
-            ru: 'На себя (15-фут cone)',
+            ru: 'На себя (15-фут конус)',
             en: 'Self (15-foot cone)',
         },
         castTime: {
@@ -9081,7 +9081,7 @@ const Spells = [
         ritual: false,
         id: 'sunbeam',
         range: {
-            ru: 'На себя (60-фут line)',
+            ru: 'На себя (60-фут линия)',
             en: 'Self (60-foot line)',
         },
         castTime: {
@@ -10041,7 +10041,7 @@ const Spells = [
         ritual: false,
         id: 'fear',
         range: {
-            ru: 'На себя (30-фут cone)',
+            ru: 'На себя (30-фут конус)',
             en: 'Self (30-foot cone)',
         },
         castTime: {
