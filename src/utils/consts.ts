@@ -15,3 +15,5 @@ export const ACTION_HEIGHT_MIN = 220;
 export const LIST_ITEM_HEIGHT = 30;
 export const MAIN_GAP = 20;
 export const ACTION_VERTICAL_PADDING = 20;
+
+export const SPELL_NAME_DROPDOWN_DIFF = 92;

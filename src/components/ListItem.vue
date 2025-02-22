@@ -9,9 +9,14 @@ import {
     watch,
 } from 'vue';
 import DropdownList from './DropdownList.vue';
-import type { Spell } from '@/utils/helpers';
+import { calculateActionHeight, type Spell } from '@/utils/helpers';
 import { TagLabels, useLangStore } from '@/stores/lang';
-import { SpellSchoolColor } from '@/utils/consts';
+import { SPELL_NAME_DROPDOWN_DIFF, SpellSchoolColor } from '@/utils/consts';
+import OBR from '@owlbear-rodeo/sdk';
+
+const props = defineProps<{
+    currentHeight: number;
+}>();
 
 const selectedSpell = defineModel<Spell | null>('spell');
 const spellName = defineModel<string>('input', { default: '' });
@@ -66,6 +71,19 @@ watch(
         if (!newName || !oldName) return;
 
         spellName.value = spellName.value.replace(oldName, newName);
+    },
+);
+watch(
+    () => selecting.value && spellsToShow.value.length,
+    async (showingDropdown) => {
+        const height = calculateActionHeight(props.currentHeight + 1);
+
+        if (showingDropdown) {
+            OBR.action.setHeight(height + SPELL_NAME_DROPDOWN_DIFF);
+            return;
+        }
+
+        OBR.action.setHeight(height);
     },
 );
 onMounted(() => {

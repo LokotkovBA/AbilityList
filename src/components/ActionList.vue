@@ -77,6 +77,7 @@ function remove(value: string) {
         v-model:spell="action.value"
         v-model:input="action.inputValue"
         :key="action.key"
+        :currentHeight="currentHeight"
         @remove-field="remove"
     />
     <section class="flex justify-between">
