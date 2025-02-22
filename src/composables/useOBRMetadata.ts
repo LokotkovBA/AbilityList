@@ -3,7 +3,11 @@ import { z } from 'zod';
 import { OBR_METADATA_KEY } from '@/utils/consts';
 import OBR from '@owlbear-rodeo/sdk';
 
-export function useORBMetadata(id: string, initialValue: string) {
+export function useORBMetadata(
+    id: string,
+    initialValue: string,
+    onSuccess?: (value: string) => void,
+) {
     const state = ref(initialValue);
     OBR.onReady(init);
 
@@ -28,6 +32,7 @@ export function useORBMetadata(id: string, initialValue: string) {
         }
 
         state.value = data[id];
+        onSuccess?.(state.value);
     }
 
     function update(value: string, metadata: unknown) {

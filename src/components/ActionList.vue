@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, watch } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import ListItem from './ListItem.vue';
 import { calculateActionHeight, type Spell } from '@/utils/helpers';
 import OBR from '@owlbear-rodeo/sdk';
@@ -9,20 +9,24 @@ import { z } from 'zod';
 import { AddLabel, LangLabel, useLangStore } from '@/stores/lang';
 
 const langStore = useLangStore();
+const nextKey = ref(1);
+const currentHeight = ref(4);
 
-const actions = reactive<{ id: number; value: Spell | null }[]>([]);
-const { state: actionsState } = useORBMetadata('actions', '[]');
-
-watch(actions, (list) => {
-    OBR.action.setHeight(calculateActionHeight(list.length + 1));
-
-    actionsState.value = JSON.stringify(list);
-});
-watch(
-    actionsState,
+const actions = reactive<
+    { inputValue: string; value: Spell | null; key: number }[]
+>([{ inputValue: '', value: null, key: 0 }]);
+const { state: actionsState } = useORBMetadata(
+    'actions',
+    JSON.stringify(actions),
     (actionsRaw) => {
         const { data, success, error } = z
-            .array(z.object({ id: z.number(), value: spellSchema.nullable() }))
+            .array(
+                z.object({
+                    inputValue: z.string(),
+                    value: spellSchema.nullable(),
+                    key: z.number(),
+                }),
+            )
             .safeParse(JSON.parse(actionsRaw));
 
         if (!success) {
@@ -30,24 +34,39 @@ watch(
             return;
         }
 
+        nextKey.value = 0;
         actions.length = 0;
 
         for (const spell of data) {
-            actions.push({ id: actions.length, value: spell.value });
+            actions.push({
+                inputValue: spell.inputValue,
+                value: spell.value,
+                key: nextKey.value,
+            });
+            nextKey.value++;
         }
-        console.log(actions);
     },
-    { immediate: true },
 );
+
+watch(actions, (list) => {
+    if (list.length !== currentHeight.value) {
+        currentHeight.value = list.length;
+        OBR.action.setHeight(calculateActionHeight(currentHeight.value + 1));
+    }
+
+    actionsState.value = JSON.stringify(list);
+});
 
 function add() {
     actions.push({
-        id: actions.length,
+        inputValue: '',
         value: null,
+        key: nextKey.value,
     });
+    nextKey.value++;
 }
-function remove(id: number) {
-    const index = actions.findIndex((action) => action.id === id);
+function remove(value: string) {
+    const index = actions.findIndex((action) => action.inputValue === value);
     actions.splice(index, 1);
 }
 </script>
@@ -55,9 +74,9 @@ function remove(id: number) {
 <template>
     <ListItem
         v-for="action in actions"
-        v-model="action.value"
-        :key="action.id"
-        :id="action.id"
+        v-model:spell="action.value"
+        v-model:input="action.inputValue"
+        :key="action.key"
         @remove-field="remove"
     />
     <section class="flex justify-between">

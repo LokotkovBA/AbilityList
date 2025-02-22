@@ -13,20 +13,16 @@ import type { Spell } from '@/utils/helpers';
 import { TagLabels, useLangStore } from '@/stores/lang';
 import { SpellSchoolColor } from '@/utils/consts';
 
-defineProps<{
-    id: number;
-}>();
-
-const selectedSpell = defineModel<Spell | null>();
+const selectedSpell = defineModel<Spell | null>('spell');
+const spellName = defineModel<string>('input', { default: '' });
 
 const emits = defineEmits<{
-    removeField: [id: number];
+    removeField: [inputValue: string];
 }>();
 
 const langStore = useLangStore();
 
 const used = ref(false);
-const spellName = ref('');
 const selecting = ref(false);
 const input = useTemplateRef<HTMLInputElement>('inputRef');
 
@@ -61,15 +57,6 @@ function stopSelecting(event: Event) {
     selecting.value = false;
 }
 
-watch(
-    selectedSpell,
-    (spell) => {
-        if (!spell) return;
-
-        spellName.value = spell.name[langStore.lang];
-    },
-    { immediate: true },
-);
 watch(
     () => langStore.lang,
     (lang, oldLang) => {
@@ -150,7 +137,7 @@ onUnmounted(() => {
 
         <button
             type="button"
-            @click="emits('removeField', id)"
+            @click="emits('removeField', spellName)"
             class="size-5 shrink-0 rounded-full bg-red-500"
         ></button>
     </section>
