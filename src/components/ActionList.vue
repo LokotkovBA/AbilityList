@@ -6,6 +6,9 @@ import OBR from '@owlbear-rodeo/sdk';
 import { useORBMetadata } from '@/composables/useOBRMetadata';
 import { spellSchema } from '@/utils/schemas';
 import { z } from 'zod';
+import { AddLabel, LangLabel, useLangStore } from '@/stores/lang';
+
+const langStore = useLangStore();
 
 const actions = reactive<{ id: number; value: Spell | null }[]>([]);
 const { state: actionsState } = useORBMetadata('actions', '[]');
@@ -57,10 +60,19 @@ function remove(id: number) {
         :id="action.id"
         @remove-field="remove"
     />
-    <button
-        class="h-[30px] self-start rounded-xl bg-blue-700 px-2 text-white"
-        @click="add"
-    >
-        Add
-    </button>
+    <section class="flex justify-between">
+        <button
+            class="h-[30px] self-start rounded-xl bg-blue-700 px-2 text-white"
+            @click="add"
+        >
+            {{ AddLabel[langStore.lang] }}
+        </button>
+
+        <button
+            class="h-[30px] self-start rounded-xl bg-blue-700 px-2 text-white"
+            @click="langStore.setLang(langStore.lang === 'ru' ? 'en' : 'ru')"
+        >
+            {{ LangLabel[langStore.lang] }}
+        </button>
+    </section>
 </template>

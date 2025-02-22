@@ -10,6 +10,7 @@ import {
 } from 'vue';
 import DropdownList from './DropdownList.vue';
 import type { Spell } from '@/utils/helpers';
+import { TagLabels, useLangStore } from '@/stores/lang';
 
 defineProps<{
     id: number;
@@ -20,6 +21,8 @@ const selectedSpell = defineModel<Spell | null>();
 const emits = defineEmits<{
     removeField: [id: number];
 }>();
+
+const langStore = useLangStore();
 
 const used = ref(false);
 const spellName = ref('');
@@ -43,7 +46,7 @@ const spellsToShow = computed(() => {
 
 function selectSpell(spell: Spell) {
     selecting.value = false;
-    spellName.value = spell.name.ru;
+    spellName.value = spell.name[langStore.lang];
     selectedSpell.value = spell;
 }
 
@@ -62,9 +65,20 @@ watch(
     (spell) => {
         if (!spell) return;
 
-        spellName.value = spell.name.ru;
+        spellName.value = spell.name[langStore.lang];
     },
     { immediate: true },
+);
+watch(
+    () => langStore.lang,
+    (lang, oldLang) => {
+        const newName = selectedSpell.value?.name[lang] ?? '';
+        const oldName = selectedSpell.value?.name[oldLang] ?? '';
+
+        if (!newName || !oldName) return;
+
+        spellName.value = spellName.value.replace(oldName, newName);
+    },
 );
 onMounted(() => {
     document.addEventListener('mousedown', stopSelecting);
@@ -99,10 +113,10 @@ onUnmounted(() => {
                 class="w-full text-xl focus:outline-none"
             />
             <span v-if="selectedSpell" class="shrink-0">
-                {{ selectedSpell?.range.ru }}
+                {{ selectedSpell?.range[langStore.lang] }}
             </span>
             <span v-if="selectedSpell" class="shrink-0">
-                {{ selectedSpell?.castTime.ru }}
+                {{ selectedSpell?.castTime[langStore.lang] }}
             </span>
 
             <DropdownList
@@ -112,6 +126,15 @@ onUnmounted(() => {
                 :data="spellsToShow"
             />
         </section>
+
+        <span v-if="selectedSpell?.ritual" class="rounded bg-violet-500 px-1">{{
+            TagLabels.ritual[langStore.lang]
+        }}</span>
+        <span
+            v-if="selectedSpell?.concentration"
+            class="rounded bg-cyan-500 px-1"
+            >{{ TagLabels.concentration[langStore.lang] }}</span
+        >
 
         <a
             v-if="selectedSpell"
