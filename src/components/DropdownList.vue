@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { useLangStore } from '@/stores/lang';
 import { SpellSchoolColor } from '@/utils/consts';
 import type { Spell } from '@/utils/helpers';
 
 defineProps<{
     data: Spell[];
 }>();
+
+const langStore = useLangStore();
 
 const emits = defineEmits<{
     selectSpell: [spell: Spell];
@@ -27,7 +30,7 @@ const emits = defineEmits<{
                     @click="emits('selectSpell', spell)"
                     class="w-full text-start text-xl"
                 >
-                    {{ spell.name.ru }}
+                    {{ spell.name[langStore.lang] }}
                 </button>
             </li>
         </ul>
