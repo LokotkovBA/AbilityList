@@ -117,10 +117,10 @@ onUnmounted(() => {
                         !!selectedSpell,
                 }"
             />
-            <span v-if="selectedSpell" class="shrink-0">
+            <span class="shrink-0 self-end" v-if="selectedSpell">
                 {{ selectedSpell?.range[langStore.lang] }}
             </span>
-            <span v-if="selectedSpell" class="shrink-0">
+            <span class="shrink-0 self-end" v-if="selectedSpell">
                 {{ selectedSpell?.castTime[langStore.lang] }}
             </span>
 
