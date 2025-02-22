@@ -15,6 +15,7 @@ import { SPELL_NAME_DROPDOWN_DIFF, SpellSchoolColor } from '@/utils/consts';
 import OBR from '@owlbear-rodeo/sdk';
 
 const props = defineProps<{
+    id: number;
     currentHeight: number;
 }>();
 
@@ -22,7 +23,7 @@ const selectedSpell = defineModel<Spell | null>('spell');
 const spellName = defineModel<string>('input', { default: '' });
 
 const emits = defineEmits<{
-    removeField: [inputValue: string];
+    removeField: [key: number];
 }>();
 
 const langStore = useLangStore();
@@ -53,13 +54,24 @@ function selectSpell(spell: Spell) {
 }
 
 function stopSelecting(event: Event) {
-    if (
-        event.currentTarget instanceof HTMLInputElement &&
-        event.currentTarget === input.value
-    )
-        return;
+    if (event.currentTarget === input.value) return;
 
     selecting.value = false;
+}
+
+const deleteSure = ref(false);
+const timeoutRef = ref<ReturnType<typeof setTimeout>>();
+function onDelete() {
+    if (!deleteSure.value) {
+        deleteSure.value = true;
+        timeoutRef.value = setTimeout(() => {
+            deleteSure.value = false;
+        }, 750);
+        return;
+    }
+
+    clearTimeout(timeoutRef.value);
+    emits('removeField', props.id);
 }
 
 watch(
@@ -155,8 +167,12 @@ onUnmounted(() => {
 
         <button
             type="button"
-            @click="emits('removeField', spellName)"
-            class="size-5 shrink-0 rounded-full bg-red-500"
+            @click="onDelete"
+            :class="{
+                'size-5 shrink-0 rounded-full': true,
+                'bg-red-700': deleteSure,
+                'bg-red-500': !deleteSure,
+            }"
         ></button>
     </section>
 </template>

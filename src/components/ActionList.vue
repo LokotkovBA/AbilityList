@@ -65,8 +65,8 @@ function add() {
     });
     nextKey.value++;
 }
-function remove(value: string) {
-    const index = actions.findIndex((action) => action.inputValue === value);
+function remove(value: number) {
+    const index = actions.findIndex((action) => action.key === value);
     actions.splice(index, 1);
 }
 </script>
@@ -76,6 +76,7 @@ function remove(value: string) {
         v-for="action in actions"
         v-model:spell="action.value"
         v-model:input="action.inputValue"
+        :id="action.key"
         :key="action.key"
         :currentHeight="currentHeight"
         @remove-field="remove"
