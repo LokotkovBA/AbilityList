@@ -6,7 +6,7 @@ import OBR from '@owlbear-rodeo/sdk';
 import { useORBMetadata } from '@/composables/useOBRMetadata';
 import { spellSchema } from '@/utils/schemas';
 import { z } from 'zod';
-import { AddLabel, LangLabel, useLangStore } from '@/stores/lang';
+import { AddLabel, useLangStore } from '@/stores/lang';
 
 const langStore = useLangStore();
 const nextKey = ref(1);
@@ -92,7 +92,7 @@ function remove(value: string) {
             class="h-[30px] self-start rounded-xl bg-blue-700 px-2 text-white"
             @click="langStore.setLang(langStore.lang === 'ru' ? 'en' : 'ru')"
         >
-            {{ LangLabel[langStore.lang] }}
+            Lang
         </button>
     </section>
 </template>
