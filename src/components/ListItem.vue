@@ -77,7 +77,7 @@ onUnmounted(() => {
 <template>
     <section
         :class="{
-            'relative flex flex-row items-center gap-2 text-white': true,
+            'flex items-center gap-2 text-white': true,
             'line-through': used,
         }"
     >
@@ -90,18 +90,28 @@ onUnmounted(() => {
                 :class="{ 'size-4 rounded-full': true, 'bg-gray-900': used }"
             />
         </button>
-        <input
-            ref="inputRef"
-            v-model="spellName"
-            @focus="selecting = true"
-            class="w-full border-b-2 text-xl focus:outline-none"
-        />
-        <span v-if="selectedSpell" class="shrink-0">
-            {{ selectedSpell?.range.ru }}
-        </span>
-        <span v-if="selectedSpell" class="shrink-0">
-            {{ selectedSpell?.castTime.ru }}
-        </span>
+
+        <section class="relative flex w-full gap-2 border-b-2">
+            <input
+                ref="inputRef"
+                v-model="spellName"
+                @focus="selecting = true"
+                class="w-full text-xl focus:outline-none"
+            />
+            <span v-if="selectedSpell" class="shrink-0">
+                {{ selectedSpell?.range.ru }}
+            </span>
+            <span v-if="selectedSpell" class="shrink-0">
+                {{ selectedSpell?.castTime.ru }}
+            </span>
+
+            <DropdownList
+                @mousedown.stop
+                v-if="selecting && spellsToShow.length"
+                @select-spell="selectSpell"
+                :data="spellsToShow"
+            />
+        </section>
 
         <a
             v-if="selectedSpell"
@@ -115,12 +125,5 @@ onUnmounted(() => {
             @click="emits('removeField', id)"
             class="size-5 shrink-0 rounded-full bg-red-500"
         ></button>
-
-        <DropdownList
-            @mousedown.stop
-            v-if="selecting && spellsToShow.length"
-            @select-spell="selectSpell"
-            :data="spellsToShow"
-        />
     </section>
 </template>
