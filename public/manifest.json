@@ -1,0 +1,12 @@
+{
+    "name": "Ability List",
+    "version": "0.0.1",
+    "manifest_version": 1,
+    "action": {
+        "title": "Ability List",
+        "icon": "/favicon.ico",
+        "popover": "/",
+        "height": 1000,
+        "width": 1000
+    }
+}
