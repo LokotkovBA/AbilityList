@@ -11,6 +11,7 @@ import {
 import DropdownList from './DropdownList.vue';
 import type { Spell } from '@/utils/helpers';
 import { TagLabels, useLangStore } from '@/stores/lang';
+import { SpellSchoolColor } from '@/utils/consts';
 
 defineProps<{
     id: number;
@@ -110,7 +111,11 @@ onUnmounted(() => {
                 ref="inputRef"
                 v-model="spellName"
                 @focus="selecting = true"
-                class="w-full text-xl focus:outline-none"
+                :class="{
+                    'w-full text-xl focus:outline-none': true,
+                    [SpellSchoolColor[selectedSpell?.type.en ?? '']]:
+                        !!selectedSpell,
+                }"
             />
             <span v-if="selectedSpell" class="shrink-0">
                 {{ selectedSpell?.range[langStore.lang] }}
