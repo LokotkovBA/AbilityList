@@ -1,5 +1,5 @@
+import { useORBMetadata } from '@/composables/useOBRMetadata';
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
 
 export type Languages = 'ru' | 'en';
 
@@ -28,7 +28,7 @@ export const TagLabels: {
 };
 
 export const useLangStore = defineStore('lang', () => {
-    const lang = ref<Languages>('ru');
+    const { state: lang } = useORBMetadata<Languages>('lang', 'ru');
 
     function setLang(val: Languages) {
         lang.value = val;

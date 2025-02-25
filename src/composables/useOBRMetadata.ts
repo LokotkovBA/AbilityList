@@ -2,12 +2,14 @@ import { ref, watch } from 'vue';
 import { z } from 'zod';
 import { OBR_METADATA_KEY } from '@/utils/consts';
 import OBR from '@owlbear-rodeo/sdk';
+import { useOBRMetadataQueue } from '@/stores/useOBRMetadataQueue';
 
-export function useORBMetadata(
+export function useORBMetadata<T extends string>(
     id: string,
-    initialValue: string,
-    onSuccess?: (value: string) => void,
+    initialValue: T,
+    onSuccess?: (value: T) => void,
 ) {
+    const metadataQueue = useOBRMetadataQueue();
     const state = ref(initialValue);
     OBR.onReady(init);
 
@@ -15,13 +17,13 @@ export function useORBMetadata(
         const playerId = await OBR.player.getId();
         id += playerId;
 
+        set(() => metadataQueue.add(id, initialValue));
+    }
+
+    async function set(onError?: () => void) {
         const metadataOBR = await OBR.room.getMetadata();
         const metadata = metadataOBR[OBR_METADATA_KEY];
 
-        set(metadata, () => update(initialValue, metadata));
-    }
-
-    function set(metadata: unknown, onError?: () => void) {
         const { success, data } = z
             .object({ [id]: z.string() })
             .safeParse(metadata);
@@ -35,20 +37,8 @@ export function useORBMetadata(
         onSuccess?.(state.value);
     }
 
-    function update(value: string, metadata: unknown) {
-        if (!metadata) {
-            OBR.room.setMetadata({ [OBR_METADATA_KEY]: { [id]: value } });
-            return;
-        }
-
-        OBR.room.setMetadata({
-            [OBR_METADATA_KEY]: { ...metadata, [id]: value },
-        });
-    }
-
-    watch(state, async (value) => {
-        const metadataOBR = await OBR.room.getMetadata();
-        update(value, metadataOBR[OBR_METADATA_KEY]);
+    watch(state, (value) => {
+        metadataQueue.add(id, value);
     });
 
     return { state };

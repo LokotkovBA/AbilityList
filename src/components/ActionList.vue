@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import ListItem from './ListItem.vue';
 import { calculateActionHeight, type Spell } from '@/utils/helpers';
 import OBR from '@owlbear-rodeo/sdk';
@@ -10,7 +10,6 @@ import { AddLabel, useLangStore } from '@/stores/lang';
 
 const langStore = useLangStore();
 const nextKey = ref(1);
-const currentHeight = ref(4);
 
 const actions = reactive<
     { inputValue: string; value: Spell | null; key: number }[]
@@ -34,28 +33,46 @@ const { state: actionsState } = useORBMetadata(
             return;
         }
 
-        nextKey.value = 0;
         actions.length = 0;
 
+        let maxKey = 0;
         for (const spell of data) {
             actions.push({
                 inputValue: spell.inputValue,
                 value: spell.value,
-                key: nextKey.value,
+                key: spell.key,
             });
-            nextKey.value++;
+
+            maxKey = Math.max(maxKey, spell.key);
+        }
+
+        nextKey.value = maxKey + 1;
+    },
+);
+watch(actions, (list) => {
+    actionsState.value = JSON.stringify(list);
+});
+
+const currentHeight = computed(() => actions.length);
+watch(currentHeight, (newHeight) => {
+    OBR.action.setHeight(calculateActionHeight(newHeight + 1));
+});
+
+watch(
+    () => langStore.lang,
+    (lang, oldLang) => {
+        for (const action of actions) {
+            if (!action.value) continue;
+
+            const newName = action.value.name[lang];
+            const oldName = action.value.name[oldLang];
+
+            if (!action.inputValue.includes(oldName)) continue;
+
+            action.inputValue = action.inputValue.replace(oldName, newName);
         }
     },
 );
-
-watch(actions, (list) => {
-    if (list.length !== currentHeight.value) {
-        currentHeight.value = list.length;
-        OBR.action.setHeight(calculateActionHeight(currentHeight.value + 1));
-    }
-
-    actionsState.value = JSON.stringify(list);
-});
 
 function add() {
     actions.push({

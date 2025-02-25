@@ -75,17 +75,6 @@ function onDelete() {
 }
 
 watch(
-    () => langStore.lang,
-    (lang, oldLang) => {
-        const newName = selectedSpell.value?.name[lang] ?? '';
-        const oldName = selectedSpell.value?.name[oldLang] ?? '';
-
-        if (!newName || !oldName) return;
-
-        spellName.value = spellName.value.replace(oldName, newName);
-    },
-);
-watch(
     () => selecting.value && spellsToShow.value.length,
     async (showingDropdown) => {
         const height = calculateActionHeight(props.currentHeight + 1);
