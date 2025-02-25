@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useLangStore } from '@/stores/lang';
+import { useLangStore } from '@/stores/useLangStore';
 import { SpellSchoolColor } from '@/utils/consts';
 import type { Spell } from '@/utils/helpers';
 

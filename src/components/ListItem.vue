@@ -10,7 +10,7 @@ import {
 } from 'vue';
 import DropdownList from './DropdownList.vue';
 import { calculateActionHeight, type Spell } from '@/utils/helpers';
-import { TagLabels, useLangStore } from '@/stores/lang';
+import { TagLabels, useLangStore } from '@/stores/useLangStore';
 import { SPELL_NAME_DROPDOWN_DIFF, SpellSchoolColor } from '@/utils/consts';
 import OBR from '@owlbear-rodeo/sdk';
 

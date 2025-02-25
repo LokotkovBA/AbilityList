@@ -6,7 +6,7 @@ import OBR from '@owlbear-rodeo/sdk';
 import { useORBMetadata } from '@/composables/useOBRMetadata';
 import { spellSchema } from '@/utils/schemas';
 import { z } from 'zod';
-import { AddLabel, useLangStore } from '@/stores/lang';
+import { AddLabel, useLangStore } from '@/stores/useLangStore';
 
 const langStore = useLangStore();
 const nextKey = ref(1);
