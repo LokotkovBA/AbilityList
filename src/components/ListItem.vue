@@ -21,6 +21,7 @@ const props = defineProps<{
 
 const selectedSpell = defineModel<Spell | null>('spell');
 const spellName = defineModel<string>('input', { default: '' });
+const used = defineModel<boolean>('used', { default: false });
 
 const emits = defineEmits<{
     removeField: [key: number];
@@ -28,7 +29,6 @@ const emits = defineEmits<{
 
 const langStore = useLangStore();
 
-const used = ref(false);
 const selecting = ref(false);
 const input = useTemplateRef<HTMLInputElement>('inputRef');
 

@@ -12,8 +12,8 @@ const langStore = useLangStore();
 const nextKey = ref(1);
 
 const actions = reactive<
-    { inputValue: string; value: Spell | null; key: number }[]
->([{ inputValue: '', value: null, key: 0 }]);
+    { inputValue: string; used: boolean; value: Spell | null; key: number }[]
+>([{ inputValue: '', used: false, value: null, key: 0 }]);
 const { state: actionsState } = useORBMetadata(
     'actions',
     JSON.stringify(actions),
@@ -22,6 +22,7 @@ const { state: actionsState } = useORBMetadata(
             .array(
                 z.object({
                     inputValue: z.string(),
+                    used: z.boolean().optional(),
                     value: spellSchema.nullable(),
                     key: z.number(),
                 }),
@@ -39,6 +40,7 @@ const { state: actionsState } = useORBMetadata(
         for (const spell of data) {
             actions.push({
                 inputValue: spell.inputValue,
+                used: !!spell.used,
                 value: spell.value,
                 key: spell.key,
             });
@@ -77,6 +79,7 @@ watch(
 function add() {
     actions.push({
         inputValue: '',
+        used: false,
         value: null,
         key: nextKey.value,
     });
@@ -93,6 +96,7 @@ function remove(value: number) {
         v-for="action in actions"
         v-model:spell="action.value"
         v-model:input="action.inputValue"
+        v-model:used="action.used"
         :id="action.key"
         :key="action.key"
         :currentHeight="currentHeight"
